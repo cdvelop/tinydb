@@ -12,6 +12,9 @@ type failStore struct{}
 
 func (f *failStore) GetFile(filePath string) ([]byte, error)    { return nil, nil }
 func (f *failStore) SetFile(filePath string, data []byte) error { return errors.New("disk full") }
+func (f *failStore) AppendToFile(filePath string, data []byte) error {
+	return errors.New("disk full")
+}
 
 func TestGet(t *testing.T) {
 	store := newMockStore()
@@ -80,7 +83,15 @@ func TestLogger(t *testing.T) {
 	var buf2 bytes.Buffer
 	logger2 := func(args ...any) { fmt.Fprintln(&buf2, args...) }
 	db2, _ := New("test.db", logger2, fs)
+	// test failing append (insert)
 	_ = db2.Set("a", "b")
+	if !strings.Contains(buf2.String(), "error appending") {
+		t.Errorf("expected error log for failing append, got '%s'", buf2.String())
+	}
+
+	// test failing persist (update)
+	buf2.Reset()
+	_ = db2.Set("a", "c")
 	if !strings.Contains(buf2.String(), "error persisting") {
 		t.Errorf("expected error log for failing persist, got '%s'", buf2.String())
 	}

@@ -4,6 +4,7 @@ package tinydb
 type Store interface {
 	GetFile(filePath string) ([]byte, error)
 	SetFile(filePath string, data []byte) error
+	AppendToFile(filePath string, data []byte) error
 }
 
 // KVStore defines the minimum API
