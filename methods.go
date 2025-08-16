@@ -44,9 +44,3 @@ func (t *TinyDB) persist(msg string) error {
 
 	return nil
 }
-
-func (t *TinyDB) log(msg string) {
-	if t.logger != nil {
-		t.logger.Write([]byte(msg + "\n"))
-	}
-}

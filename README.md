@@ -74,6 +74,9 @@ db, err := tinydb.New("mydb.tdb", logger, store)
 - `name` (string): logical database name; commonly a file path used by the `Store` implementation.
 - `logger` (io.Writer): optional logging target; may be `os.Stdout` or `nil`.
 - `store` (Store): required backend implementation.
+ - `name` (string): logical database name; commonly a file path used by the `Store` implementation.
+ - `logger` (`tinydb.LoggerFunc`, signature `func(...any)`): optional logger function; may be a wrapper that writes to `os.Stdout` or `nil`.
+ - `store` (Store): required backend implementation.
 
 ## Minimal example (file-backed store)
 
@@ -96,7 +99,17 @@ func (fs FileStore) SetFile(path string, data []byte) error {
 }
 
 func main() {
-    db, err := tinydb.New("settings.tdb", os.Stdout, FileStore{})
+    // Simple LoggerFunc using only the built-in print/println helpers
+    logger := func(args ...any) {
+        for i, a := range args {
+            if i > 0 {
+                print(" ")
+            }
+            print(a)
+        }
+        println()
+    }
+    db, err := tinydb.New("settings.tdb", logger, FileStore{})
     if err != nil {
         panic(err)
     }

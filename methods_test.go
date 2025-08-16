@@ -3,6 +3,7 @@ package tinydb
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -65,7 +66,8 @@ func TestSet(t *testing.T) {
 func TestLogger(t *testing.T) {
 	store := newMockStore()
 	var buf bytes.Buffer
-	db, _ := New("test.db", &buf, store)
+	logger := func(args ...any) { fmt.Fprintln(&buf, args...) }
+	db, _ := New("test.db", logger, store)
 
 	// Successful operations should not log
 	db.Set("foo", "bar")
@@ -76,7 +78,8 @@ func TestLogger(t *testing.T) {
 	// Now simulate a failing store to ensure errors are logged
 	fs := &failStore{}
 	var buf2 bytes.Buffer
-	db2, _ := New("test.db", &buf2, fs)
+	logger2 := func(args ...any) { fmt.Fprintln(&buf2, args...) }
+	db2, _ := New("test.db", logger2, fs)
 	_ = db2.Set("a", "b")
 	if !strings.Contains(buf2.String(), "error persisting") {
 		t.Errorf("expected error log for failing persist, got '%s'", buf2.String())

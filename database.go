@@ -1,8 +1,6 @@
 package tinydb
 
 import (
-	"io"
-
 	. "github.com/cdvelop/tinystring"
 )
 
@@ -11,23 +9,31 @@ type pair struct {
 	Value string
 }
 
-type TinyDB struct {
-	name   string
-	data   []pair
-	logger io.Writer
-	store  Store
+// LoggerFunc is a simple logger that accepts any values (like fmt.Println).
+// Use a nil LoggerFunc when you want no-op logging; New will set a safe default.
+type LoggerFunc func(...any)
 
-	raw builder
+type TinyDB struct {
+	name  string
+	data  []pair
+	log   LoggerFunc
+	store Store
+
+	raw *Conv
 }
 
 // New creates or loads a database
-func New(name string, logger io.Writer, store Store) (*TinyDB, error) {
+func New(name string, log LoggerFunc, store Store) (*TinyDB, error) {
+	if log == nil {
+		log = func(...any) {}
+	}
+
 	db := &TinyDB{
-		name:   name,
-		data:   make([]pair, 0),
-		logger: logger,
-		store:  store,
-		raw:    Convert(),
+		name:  name,
+		data:  make([]pair, 0),
+		log:   log,
+		store: store,
+		raw:   Convert(),
 	}
 
 	// try to load DB from Store

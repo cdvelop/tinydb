@@ -1,9 +1,5 @@
 package tinydb
 
-import (
-	"github.com/cdvelop/tinystring"
-)
-
 // Store defines the persistence interface
 type Store interface {
 	GetFile(filePath string) ([]byte, error)
