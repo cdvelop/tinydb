@@ -1,27 +1,7 @@
-# tinydb
-TinyGo–compatible key–value store with a minimal API (Get, Set). Uses pluggable Store backends for persistence and io.Writer for logging. Data is stored as key=value lines, avoiding heavy dependencies. Ideal for lightweight apps, WASM, or embedded systems.
-
-
-Perfecto 🚀, te armo la descripción en inglés y un README minimalista para tinydb.
-
-
----
-
-🔹 Project description (English)
-
-tinydb is a lightweight, TinyGo–compatible key–value store with a minimal API.
+# TinyDB
+TinyGo–compatible key–value store with a minimal API.
 It provides a simple way to persist string-based key–value pairs using a custom Store backend interface.
 Unlike traditional databases, tinydb avoids heavy dependencies (like JSON, SQL, or reflection) and relies only on io.Writer for logging and a user–provided Store implementation for persistence.
-
-
----
-
-🔹 README draft
-
-# tinydb
-
-**tinydb** is a minimal, TinyGo–compatible key–value store.  
-It provides a very small API (`Get`, `Set`) with pluggable storage backends, making it suitable for embedded systems, WASM, and small projects that need persistence without heavy dependencies.
 
 ---
 
@@ -62,7 +42,6 @@ name → logical DB name (usually a file path).
 logger io.Writer → optional writer for logs.
 
 store Store → backend implementation for persistence.
-
 
 
 ---
