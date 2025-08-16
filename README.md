@@ -62,6 +62,11 @@ type Store interface {
 
     // SetFile replaces the file contents with the provided data.
     SetFile(filePath string, data []byte) error
+
+    // AddToFile appends the provided data to the named file.
+    // Used by tinydb when adding a new key/value pair to avoid
+    // rewriting the entire backing store for each insert.
+    AddToFile(filePath string, data []byte) error
 }
 ```
 
@@ -96,6 +101,19 @@ func (fs FileStore) GetFile(path string) ([]byte, error) {
 
 func (fs FileStore) SetFile(path string, data []byte) error {
     return os.WriteFile(path, data, 0644)
+}
+
+// AddToFile appends bytes to the end of the named file. This is used by
+// tinydb when inserting new key/value pairs to avoid rewriting the whole
+// store on every insert.
+func (fs FileStore) AddToFile(path string, data []byte) error {
+    f, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+    if err != nil {
+        return err
+    }
+    defer f.Close()
+    _, err = f.Write(data)
+    return err
 }
 
 func main() {
@@ -150,6 +168,27 @@ Notes:
 - Unit test the `Store` implementations (file, memory, mocks) independently.
 - Add tests for basic Set/Get behaviour and for recovery after failures (simulate I/O errors).
 
+
+
+
+## Benchmarks ⚡️
+
+Run on: Linux (11th Gen Intel i7-11800H @ 2.30GHz)
+
+The following micro-benchmark measures allocations and time for repeated `Set` operations.
+
+| Test | ns/op | B/op | allocs/op |
+|---|---:|---:|---:|
+| BenchmarkSetAlloc-16 | 96,493 | 364 | 5 |
+
+Quick notes:
+- 🟢 ns/op — lower is better (time per operation).
+- 🟢 B/op and allocs/op — lower is better (memory allocations per operation).
+- 🟡 Result: reasonable for a small in-memory store; low allocations but non-negligible per-op cost.
+- 💡 Suggestion: consider reusing buffers (buffer pools) to reduce allocations if you need maximum optimization.
+- ⚠️ This benchmark uses an in-memory `memStore` (no disk I/O); file-backed implementations will be slower.
+
+
 ## Limitations
 
 - Not a full database: tinydb is intended for small key/value needs with simple persistence.
@@ -158,9 +197,3 @@ Notes:
 ## License
 
 MIT
-
----
-
-
-
-

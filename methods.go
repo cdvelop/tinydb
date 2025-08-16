@@ -36,7 +36,7 @@ func (t *TinyDB) append(p pair) error {
 	t.raw.Write(p.Value)
 	t.raw.Write("\n")
 
-	if err := t.store.AppendToFile(t.name, t.raw.Bytes()); err != nil {
+	if err := t.store.AddToFile(t.name, t.raw.Bytes()); err != nil {
 		// log only on error
 		t.log("error appending:", err.Error())
 		return err

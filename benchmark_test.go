@@ -17,7 +17,7 @@ func (m *memStore) SetFile(path string, data []byte) error {
 	return nil
 }
 
-func (m *memStore) AppendToFile(path string, data []byte) error {
+func (m *memStore) AddToFile(path string, data []byte) error {
 	m.data = append(m.data, data...)
 	return nil
 }

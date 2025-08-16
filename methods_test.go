@@ -12,7 +12,7 @@ type failStore struct{}
 
 func (f *failStore) GetFile(filePath string) ([]byte, error)    { return nil, nil }
 func (f *failStore) SetFile(filePath string, data []byte) error { return errors.New("disk full") }
-func (f *failStore) AppendToFile(filePath string, data []byte) error {
+func (f *failStore) AddToFile(filePath string, data []byte) error {
 	return errors.New("disk full")
 }
 

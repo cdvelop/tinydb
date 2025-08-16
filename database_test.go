@@ -29,7 +29,7 @@ func (m *mockStore) SetFile(filePath string, data []byte) error {
 	return nil
 }
 
-func (m *mockStore) AppendToFile(filePath string, data []byte) error {
+func (m *mockStore) AddToFile(filePath string, data []byte) error {
 	m.files[filePath] = append(m.files[filePath], data...)
 	return nil
 }
