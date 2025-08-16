@@ -11,3 +11,9 @@ type KVStore interface {
 	Get(key string) (string, error)
 	Set(key, value string) error
 }
+
+type builder interface {
+	Reset() error
+	Write(v any) error
+	Bytes() []byte
+}

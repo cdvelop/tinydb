@@ -11,20 +11,23 @@ type pair struct {
 	Value string
 }
 
-type tinydb struct {
+type TinyDB struct {
 	name   string
 	data   []pair
 	logger io.Writer
 	store  Store
+
+	raw builder
 }
 
 // New creates or loads a database
-func New(name string, logger io.Writer, store Store) (KVStore, error) {
-	db := &tinydb{
+func New(name string, logger io.Writer, store Store) (*TinyDB, error) {
+	db := &TinyDB{
 		name:   name,
 		data:   make([]pair, 0),
 		logger: logger,
 		store:  store,
+		raw:    Convert(),
 	}
 
 	// try to load DB from Store
@@ -43,7 +46,6 @@ func New(name string, logger io.Writer, store Store) (KVStore, error) {
 				})
 			}
 		}
-		db.log("db loaded: " + name)
 	}
 
 	return db, nil

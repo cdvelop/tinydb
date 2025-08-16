@@ -4,7 +4,7 @@ import (
 	. "github.com/cdvelop/tinystring"
 )
 
-func (t *tinydb) Get(key string) (string, error) {
+func (t *TinyDB) Get(key string) (string, error) {
 	for _, p := range t.data {
 		if p.Key == key {
 			return p.Value, nil
@@ -13,7 +13,7 @@ func (t *tinydb) Get(key string) (string, error) {
 	return "", Err("key not found: ", key)
 }
 
-func (t *tinydb) Set(key, value string) error {
+func (t *TinyDB) Set(key, value string) error {
 	// search if it exists
 	for i, p := range t.data {
 		if p.Key == key {
@@ -27,23 +27,27 @@ func (t *tinydb) Set(key, value string) error {
 	return t.persist("insert key=" + key)
 }
 
-func (t *tinydb) persist(msg string) error {
-	var lines []string
+func (t *TinyDB) persist(msg string) error {
+	raw := Convert()
 	for _, p := range t.data {
-		lines = append(lines, p.Key+"="+p.Value)
+		raw.Write(p.Key)
+		raw.Write("=")
+		raw.Write(p.Value)
+		raw.Write("\n")
 	}
 
 	raw := Convert(lines).Join("\n").String()
 
-	if err := t.store.SetFile(t.name, []byte(raw)); err != nil {
+	if err := t.store.SetFile(t.name, raw.Byte()); err != nil {
+		// log only on error
+		t.log("error persisting: " + err.Error())
 		return err
 	}
 
-	t.log(msg)
 	return nil
 }
 
-func (t *tinydb) log(msg string) {
+func (t *TinyDB) log(msg string) {
 	if t.logger != nil {
 		t.logger.Write([]byte(msg + "\n"))
 	}
