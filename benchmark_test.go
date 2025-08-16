@@ -17,6 +17,11 @@ func (m *memStore) SetFile(path string, data []byte) error {
 	return nil
 }
 
+func (m *memStore) AppendToFile(path string, data []byte) error {
+	m.data = append(m.data, data...)
+	return nil
+}
+
 // BenchmarkSetAlloc measures allocations when performing many Set operations.
 // It reports allocations per operation and total time.
 func BenchmarkSetAlloc(b *testing.B) {
