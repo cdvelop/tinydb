@@ -28,17 +28,15 @@ func (t *TinyDB) Set(key, value string) error {
 }
 
 func (t *TinyDB) persist(msg string) error {
-	raw := Convert()
+	t.raw.Reset()
 	for _, p := range t.data {
-		raw.Write(p.Key)
-		raw.Write("=")
-		raw.Write(p.Value)
-		raw.Write("\n")
+		t.raw.Write(p.Key)
+		t.raw.Write("=")
+		t.raw.Write(p.Value)
+		t.raw.Write("\n")
 	}
 
-	raw := Convert(lines).Join("\n").String()
-
-	if err := t.store.SetFile(t.name, raw.Byte()); err != nil {
+	if err := t.store.SetFile(t.name, t.raw.Bytes()); err != nil {
 		// log only on error
 		t.log("error persisting: " + err.Error())
 		return err

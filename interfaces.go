@@ -1,5 +1,9 @@
 package tinydb
 
+import (
+	"github.com/cdvelop/tinystring"
+)
+
 // Store defines the persistence interface
 type Store interface {
 	GetFile(filePath string) ([]byte, error)
@@ -13,7 +17,7 @@ type KVStore interface {
 }
 
 type builder interface {
-	Reset() error
-	Write(v any) error
+	Reset() *tinystring.conv
+	Write(v any) *tinystring.conv
 	Bytes() []byte
 }
