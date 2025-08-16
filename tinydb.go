@@ -1,10 +1,8 @@
 package tinydb
 
 import (
-	"errors"
 	"io"
-
-	"github.com/cdvelop/tinystring"
+	. "github.com/cdvelop/tinystring"
 )
 
 // Store define la interfaz de persistencia
@@ -43,9 +41,9 @@ func New(name string, logger io.Writer, store Store) (KVStore, error) {
 	// intentar cargar DB desde el Store
 	raw, err := store.GetFile(name)
 	if err == nil && len(raw) > 0 {
-		lines := tinystring.Split(string(raw), "\n")
+		lines := Split(string(raw), "\n")
 		for _, line := range lines {
-			if tinystring.TrimSpace(line) == "" {
+			if TrimSpace(line) == "" {
 				continue
 			}
 			kv := tinystring.SplitN(line, "=", 2)
@@ -68,7 +66,7 @@ func (t *tinydb) Get(key string) (string, error) {
 			return p.Value, nil
 		}
 	}
-	return "", errors.New("key not found: " + key)
+	return "", Err("key not found: ", key)
 }
 
 func (t *tinydb) Set(key, value string) error {
@@ -91,7 +89,7 @@ func (t *tinydb) persist(msg string) error {
 		lines = append(lines, p.Key+"="+p.Value)
 	}
 
-	raw := tinystring.Join(lines, "\n")
+	raw := Join(lines, "\n")
 
 	if err := t.store.SetFile(t.name, []byte(raw)); err != nil {
 		return err
