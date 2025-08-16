@@ -15,9 +15,3 @@ type KVStore interface {
 	Get(key string) (string, error)
 	Set(key, value string) error
 }
-
-type builder interface {
-	Reset() *tinystring.conv
-	Write(v any) *tinystring.conv
-	Bytes() []byte
-}
