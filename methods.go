@@ -1,8 +1,8 @@
 package kvdb
 
 import (
-	. "github.com/tinywasm/fmt"
-	. "github.com/tinywasm/time"
+	. "webtyp.com/fmt"
+	. "webtyp.com/time"
 )
 
 const (

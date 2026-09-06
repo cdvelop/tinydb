@@ -1,7 +1,7 @@
 package kvdb
 
 import (
-	. "github.com/tinywasm/fmt"
+	. "webtyp.com/fmt"
 )
 
 // lineKind classifies a line of the backing file.

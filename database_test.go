@@ -101,7 +101,7 @@ func TestNew(t *testing.T) {
 		}
 	})
 
-	// Reproduces the bug where starting tinywasm silently deletes externally
+	// Reproduces the bug where starting webtyp silently deletes externally
 	// set .env values that contain more than one '=' (e.g. POSTGRES_DSN
 	// connection strings with query parameters like "?sslmode=disable").
 	//
@@ -112,7 +112,7 @@ func TestNew(t *testing.T) {
 	// data back to disk (full overwrite), permanently erasing the DSN line.
 	t.Run("does not delete external env values containing multiple '=' (e.g. POSTGRES_DSN)", func(t *testing.T) {
 		store := newMockStore()
-		const dsn = "postgres://user:pass@host:5432/db?sslmode=disable&application_name=tinywasm"
+		const dsn = "postgres://user:pass@host:5432/db?sslmode=disable&application_name=webtyp"
 		store.SetFile("test.db", []byte("POSTGRES_DSN="+dsn+"\ndev_mode=false"))
 
 		db, err := New("test.db", nil, store)
@@ -128,7 +128,7 @@ func TestNew(t *testing.T) {
 			t.Errorf("expected POSTGRES_DSN %q, got %q", dsn, val)
 		}
 
-		// Simulate tinywasm startup writing an unrelated key (e.g. dev_mode),
+		// Simulate webtyp startup writing an unrelated key (e.g. dev_mode),
 		// which triggers a full-file persist of in-memory data.
 		if err := db.Set("dev_mode", "true"); err != nil {
 			t.Fatalf("unexpected error: %v", err)

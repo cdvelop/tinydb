@@ -3,8 +3,8 @@ package kvdb
 import (
 	"sync"
 
-	. "github.com/tinywasm/fmt"
-	. "github.com/tinywasm/time"
+	. "webtyp.com/fmt"
+	. "webtyp.com/time"
 )
 
 type pair struct {
@@ -38,7 +38,7 @@ type TinyDB struct {
 	mu  sync.RWMutex
 
 	debounceDelay int   // milliseconds
-	debounceTimer Timer // from github.com/tinywasm/time
+	debounceTimer Timer // from webtyp.com/time
 	dirty         bool
 }
 

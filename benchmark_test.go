@@ -3,7 +3,7 @@ package kvdb
 import (
 	"testing"
 
-	. "github.com/tinywasm/fmt"
+	. "webtyp.com/fmt"
 )
 
 // memStore is a lightweight in-memory Store used only for benchmarks.

@@ -92,7 +92,7 @@ package main
 
 import (
     "os"
-    "github.com/tinywasm/kvdb"
+    "webtyp.com/kvdb"
 )
 
 type FileStore struct{}
